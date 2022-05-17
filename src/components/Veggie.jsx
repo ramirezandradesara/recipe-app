@@ -3,33 +3,34 @@ import { Splide, SplideSlide } from '@splidejs/react-splide';
 import styled from 'styled-components'
 import "@splidejs/splide/dist/css/splide.min.css";
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
 
 function Veggie() {
 
   const [veggie, setVeggie] = useState([]);
 
-    useEffect(() => {
-        getVeggie()
-    }, []) // only execute when is mounted
+  useEffect(() => {
+    getVeggie()
+  }, []) // only execute when is mounted
 
-    // async is a keyword that tells the browser that this function is going to take a while to run. We have the data first before we render anything.
-    const getVeggie = async () => {
+  // async is a keyword that tells the browser that this function is going to take a while to run. We have the data first before we render anything.
+  const getVeggie = async () => {
 
-        const check = localStorage.getItem('veggie');
-        if (check) {
-            setVeggie(JSON.parse(check))
-        } else {
-            const api = await fetch(
-                `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9&tags=vegetarian`
-            );
-            const data = await api.json();
-            console.log(data);
-            setVeggie(data.recipes);
+    const check = localStorage.getItem('veggie');
+    if (check) {
+      setVeggie(JSON.parse(check))
+    } else {
+      const api = await fetch(
+        `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9&tags=vegetarian`
+      );
+      const data = await api.json();
+      console.log(data);
+      setVeggie(data.recipes);
 
-            localStorage.setItem('veggie', JSON.stringify(data.recipes));
-        }
-
+      localStorage.setItem('veggie', JSON.stringify(data.recipes));
     }
+
+  }
 
   return (
     <div>
@@ -47,9 +48,11 @@ function Veggie() {
             return (
               <SplideSlide key={recipe.id}>
                 <Card>
-                  <p>{recipe.title}</p>
-                  <img src={recipe.image} alt={recipe.title} />
-                  <Gradient />
+                  <Link to={"/recipe/" + recipe.id}>
+                    <p>{recipe.title}</p>
+                    <img src={recipe.image} alt={recipe.title} />
+                    <Gradient />
+                  </Link>
                 </Card>
               </SplideSlide>
             );
